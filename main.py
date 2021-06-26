@@ -32,7 +32,7 @@ try:
         if (file != ".DS_Store" and '.docx' not in file) and ('.JPG' in file or '.jpeg' in file or '.jpg' in file or '.JPEG' in file):  # may want to add to check if they are jpeg, JPG, PNG, etc
             img = Image.open(f'{path}/{file}')
             exif = {ExifTags.TAGS[k]: v for k, v in img._getexif().items() if k in ExifTags.TAGS}
-            
+
             ''' prints the dictionary
             for k, v in exif.items():
                 print(f'{k}: {v}')
@@ -56,21 +56,7 @@ try:
                 img.close()
                 os.rename(f'{path}/{file}', f'{path}/{action}')
             document.save(f'{path}/Metadata {action[0:action.find(".")]}.docx')
-            # still don't understand dictionaries
-            '''
-            if exif.get("DateTimeOriginal") is None:
-                print(f'{file} has no date metadata.')
-            else:
-                date = exif.get("DateTimeOriginal")
-                date = date[0:date.find(' ')]
-                dateNew = date.replace(':', '-')
-                newFileName = f'{file[0:file.find(".")]} {dateNew}{file[file.find("."):]}'
-                print(newFileName)
-                if dateNew in file:
-                    pass
-                else:
-                    os.rename(f'{path}/{file}', f'{path}/{newFileName}')
-            '''
+            
 except Exception:
     print(traceback.format_exc())
     input("Press return to exit")
