@@ -26,14 +26,17 @@ try:
         else:
             return newFileName
 
-
     for file in os.listdir(path):
         print(file)
         if (file != ".DS_Store" and '.docx' not in file) and ('.JPG' in file or '.jpeg' in file or '.jpg' in file or '.JPEG' in file):  # may want to add to check if they are jpeg, JPG, PNG, etc
             img = Image.open(f'{path}/{file}')
             exif = {ExifTags.TAGS[k]: v for k, v in img._getexif().items() if k in ExifTags.TAGS}
-
-            ''' prints the dictionary
+            updatedExif = {}
+            for i in range(len(desiredExifs)):
+                if exif.get(desiredExifs[i]) != None:
+                    updatedExif[desiredExifs[i]] = exif.get(desiredExifs[i])
+            print(updatedExif)
+            '''prints the dictionary
             for k, v in exif.items():
                 print(f'{k}: {v}')
             print()
@@ -44,7 +47,7 @@ try:
             hdr_cells = table.rows[0].cells
             hdr_cells[0].text = 'Key'
             hdr_cells[1].text = 'Value'
-            for k, v in exif.items():
+            for k, v in updatedExif.items():
                 row_cells = table.add_row().cells
                 row_cells[0].text = f'{k}'
                 row_cells[1].text = f'{v}'
@@ -56,9 +59,7 @@ try:
                 img.close()
                 os.rename(f'{path}/{file}', f'{path}/{action}')
             document.save(f'{path}/Metadata {action[0:action.find(".")]}.docx')
-            
+
 except Exception:
     print(traceback.format_exc())
     input("Press return to exit")
-
-#information to include: GPSInfo, Make, Model, DateTime, XResolution, YResolution, DateTimeOriginal, ExifImageWidth, ExifImageHeight
